@@ -7,7 +7,13 @@ using UnityEngine.InputSystem;
 public class Drone_Movement : MonoBehaviour
 {
     private Rigidbody _rigidbody;
-    private float _speed = 1f;
+    private float _speed = 0.1f; // all directions
+    private float horizontal_speed = 0.5f; // up, down
+    private float rotation_speed = 0.3f; // (yaw) left, right
+    private Vector3 target_dir = new Vector3(0, 0, 0); // Relative xyz-direction
+    Vector3 left_stick_vec = new Vector3(0, 0, 0);
+    Vector3 right_stick_vec = new Vector3(0, 0, 0);
+    Vector3 rotation_vel_vec = new Vector3(0, 0, 0);
 
     // Start is called before the first frame update
     void Start()
@@ -17,24 +23,25 @@ public class Drone_Movement : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-
+    {   
+        target_dir = (left_stick_vec + right_stick_vec); // Combine left and right stick inputs
+        // Rotate drone
+        Quaternion deltaRotation = Quaternion.Euler(rotation_vel_vec);
+        _rigidbody.MoveRotation(_rigidbody.rotation * deltaRotation);
+        // Add velocity
+        _rigidbody.velocity += (_rigidbody.rotation * target_dir) * _speed;
     }
 
+    // Called when left stick input is perceived.
     private void OnLeftStick(InputValue value) {
         Vector2 input_vec = value.Get<Vector2>();
-        Debug.Log(input_vec);
-        Vector3 target_dir = new Vector3(0, input_vec[1], 0);
-        _rigidbody.velocity = target_dir * _speed;
-        Vector3 m_EulerAngleVelocity = new Vector3(0, input_vec[0] * 20, 0);
-        Quaternion deltaRotation = Quaternion.Euler(m_EulerAngleVelocity);
-        _rigidbody.MoveRotation(_rigidbody.rotation * deltaRotation);
+        left_stick_vec = new Vector3(0, input_vec[1] * horizontal_speed, 0);
+        rotation_vel_vec = new Vector3(0, input_vec[0] * rotation_speed, 0);
     }
 
+    // Called when right stick input is perceived.
     private void OnRightStick(InputValue value) {
         Vector2 input_vec = value.Get<Vector2>();
-        Debug.Log(input_vec);
-        Vector3 target_dir = new Vector3(input_vec[0], 0, input_vec[1]);
-        _rigidbody.velocity = target_dir * _speed;
+        right_stick_vec = new Vector3(input_vec[0], 0, input_vec[1]);
     }
 }
