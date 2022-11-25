@@ -39,7 +39,11 @@
     },
     "com.unity.ide.rider": {
       "version": "3.0.16",
+<<<<<<< Updated upstream
       "depth": 0,
+=======
+      "depth": 1,
+>>>>>>> Stashed changes
       "source": "registry",
       "dependencies": {
         "com.unity.ext.nunit": "1.0.6"
