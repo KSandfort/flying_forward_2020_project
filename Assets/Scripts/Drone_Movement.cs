@@ -35,6 +35,7 @@ public class Drone_Movement : MonoBehaviour
     // Called when left stick input is perceived.
     private void OnLeftStick(InputValue value) {
         Vector2 input_vec = value.Get<Vector2>();
+        Debug.Log(input_vec);
         left_stick_vec = new Vector3(0, input_vec[1] * horizontal_speed, 0);
         rotation_vel_vec = new Vector3(0, input_vec[0] * rotation_speed, 0);
     }
