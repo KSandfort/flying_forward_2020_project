@@ -7,9 +7,9 @@ using UnityEngine.InputSystem;
 public class Drone_Movement : MonoBehaviour
 {
     private Rigidbody _rigidbody;
-    private float _speed = 01f; // all directions
-    private float horizontal_speed = 0.5f; // up, down
-    private float rotation_speed = 1f; // (yaw) left, right
+    private float horizontal_speed = 0.5f;
+    private float vertical_speed = 0.2f;
+    private float rotation_speed = 0.4f; // (yaw) left, right
     private Vector3 target_dir = new Vector3(0, 0, 0); // Relative xyz-direction
     Vector3 left_stick_vec = new Vector3(0, 0, 0);
     Vector3 right_stick_vec = new Vector3(0, 0, 0);
@@ -29,19 +29,19 @@ public class Drone_Movement : MonoBehaviour
         Quaternion deltaRotation = Quaternion.Euler(rotation_vel_vec);
         _rigidbody.MoveRotation(_rigidbody.rotation * deltaRotation);
         // Add velocity
-        _rigidbody.velocity += (_rigidbody.rotation * target_dir) * _speed;
+        _rigidbody.velocity += (_rigidbody.rotation * target_dir);
     }
 
     // Called when left stick input is perceived.
     private void OnLeftStick(InputValue value) {
         Vector2 input_vec = value.Get<Vector2>();
-        left_stick_vec = new Vector3(0, input_vec[1] * horizontal_speed, 0);
+        left_stick_vec = new Vector3(0, input_vec[1] * vertical_speed, 0);
         rotation_vel_vec = new Vector3(0, input_vec[0] * rotation_speed, 0);
     }
 
     // Called when right stick input is perceived.
     private void OnRightStick(InputValue value) {
         Vector2 input_vec = value.Get<Vector2>();
-        right_stick_vec = new Vector3(input_vec[0], 0, input_vec[1]);
+        right_stick_vec = new Vector3(input_vec[0] * horizontal_speed, 0, input_vec[1] * horizontal_speed);
     }
 }
