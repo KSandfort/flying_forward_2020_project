@@ -58,8 +58,7 @@ public class Drone_Movement : MonoBehaviour
         right_stick_vec = new Vector3(input_vec[0] * horizontal_speed, 0, input_vec[1] * horizontal_speed);
     }
 
-    private void OnEndSim() {
-        Debug.Log("END GAME NOW");
+    private void OnUploadData() {
         data_tracking_script = this.GetComponent(typeof(Data_Tracking)) as Data_Tracking;
         data_tracking_script.generate_fake_data();
         data_tracking_script.generate_json_object();

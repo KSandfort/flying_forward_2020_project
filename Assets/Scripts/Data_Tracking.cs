@@ -31,6 +31,7 @@ public class Data_Tracking : MonoBehaviour
     // Time tracking
     private Stopwatch timer;
     private int update_count;
+    private double last_log_time;
 
     // Rigidbody reference
     Rigidbody _rigidbody;
@@ -52,20 +53,22 @@ public class Data_Tracking : MonoBehaviour
     {
         update_count += 1;
         if (update_count >= 9) { // Perform action on every 10th fixed update
-            TimeSpan timeSpan = timer.Elapsed;
-            double millis = timeSpan.Milliseconds;
-            DroneVector droneVector = new DroneVector(
-                millis, 
-                _rigidbody.position.x,
-                _rigidbody.position.y,
-                _rigidbody.position.z,
-                _rigidbody.velocity.x,
-                _rigidbody.velocity.y,
-                _rigidbody.velocity.z
-            );
-            vector_list.Add(droneVector);
+            update_count = 0;
+            double millis = timer.ElapsedMilliseconds;
+            if (last_log_time != millis) {
+                DroneVector droneVector = new DroneVector(
+                    millis, 
+                    _rigidbody.position.x,
+                    _rigidbody.position.y,
+                    _rigidbody.position.z,
+                    _rigidbody.velocity.x,
+                    _rigidbody.velocity.y,
+                    _rigidbody.velocity.z
+                );
+                vector_list.Add(droneVector);
+            }
+            last_log_time = millis;
         }
-        
     }
 
     public void foo() {
@@ -126,8 +129,7 @@ public class Data_Tracking : MonoBehaviour
         postHeader.Add("Content-Type", "application/json");
 
         // convert json string to byte
-        string json_string2 = "{\"user_data\": {\"age\": 0,\"flying_exp_mins\": 0,\"gender\": \"m\",\"license\": \"string\"},\"map\":\"string\",\"summary\": {\"time_overflying_people_ms\": 0,\"number_overflown_people\": 0,\"min_dist_to_nearest_structure\": 0,\"min_dist_to_nearest_person\": 0,\"avg_dist_to_intruder\": 0,\"max_dist_to_start\": 0,\"gated_vul_points\": 0},\"vectors\": [] }";
-        var formData = System.Text.Encoding.UTF8.GetBytes(json_string2);
+        var formData = System.Text.Encoding.UTF8.GetBytes(json_string);
 
         www = new WWW("http://185.167.96.189:5000/api/dump", formData, postHeader);
         StartCoroutine(WaitForRequest(www));

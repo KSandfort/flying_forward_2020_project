@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "EndSim",
+                    "name": "UploadData",
                     "type": "Button",
                     "id": "deb4d72a-8465-4d2f-9fe9-0abe072c1245",
                     "expectedControlType": "Button",
@@ -169,11 +169,11 @@
                 {
                     "name": "",
                     "id": "6a5204e0-bdca-42b4-ab50-cda9ced26455",
-                    "path": "<Keyboard>/escape",
+                    "path": "<Keyboard>/u",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "EndSim",
+                    "action": "UploadData",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
