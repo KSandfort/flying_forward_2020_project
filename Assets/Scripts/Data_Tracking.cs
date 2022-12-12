@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.Networking;
 using Newtonsoft.Json.Linq;
 
 public class Data_Tracking : MonoBehaviour
@@ -27,22 +28,48 @@ public class Data_Tracking : MonoBehaviour
     private string json_string;
     private JObject json;
 
+    // Time tracking
+    private Stopwatch timer;
+    private int update_count;
+
+    // Rigidbody reference
+    Rigidbody _rigidbody;
+
     // Start is called before the first frame update
     void Start()
     {
         // Initialize variables
+        _rigidbody = GetComponent<Rigidbody>();
         map_type = "Intruder";
         vector_list = new List<DroneVector>();
+        update_count = 0;
+        timer = new Stopwatch();
+        timer.Start();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        //Debug.Log(transform.position);
+        update_count += 1;
+        if (update_count >= 9) { // Perform action on every 10th fixed update
+            TimeSpan timeSpan = timer.Elapsed;
+            double millis = timeSpan.Milliseconds;
+            DroneVector droneVector = new DroneVector(
+                millis, 
+                _rigidbody.position.x,
+                _rigidbody.position.y,
+                _rigidbody.position.z,
+                _rigidbody.velocity.x,
+                _rigidbody.velocity.y,
+                _rigidbody.velocity.z
+            );
+            vector_list.Add(droneVector);
+        }
+        
     }
 
     public void foo() {
-        Debug.Log("Foo");
+        UnityEngine.Debug.Log("Foo");
     }
 
     public void generate_fake_data() {
@@ -57,10 +84,10 @@ public class Data_Tracking : MonoBehaviour
         avg_distance_to_intruder = 3.14f;
         max_dist_to_start = 123.45;
         gated_vul_points = 9876;
-        DroneVector vector1 = new DroneVector(200, 93.4f, 45.0f, 459.5f, 4934.0f, 494.2f, 495.3f);
-        DroneVector vector2 = new DroneVector(400, 83.3f, 46.0f, 480.5f, 4334.4f, 454.2f, 245.7f);
-        vector_list.Add(vector1);
-        vector_list.Add(vector2);
+        // DroneVector vector1 = new DroneVector(200, 93.4f, 45.0f, 459.5f, 4934.0f, 494.2f, 495.3f);
+        // DroneVector vector2 = new DroneVector(400, 83.3f, 46.0f, 480.5f, 4334.4f, 454.2f, 245.7f);
+        // vector_list.Add(vector1);
+        // vector_list.Add(vector2);
     }
 
     public void generate_json_object() {
@@ -88,16 +115,13 @@ public class Data_Tracking : MonoBehaviour
         }
         json_string = json_string.Remove(json_string.Length-1); // Remove last comma
         json_string += "]}";
-        Debug.Log(json_string);
-
-        // string test_str = "{ \"context_name\": { \"lower_bound\": \"value\", \"upper_bound\": \"value\", \"values\": [ \"value1\", \"valueN\" ] } }";
         json = JObject.Parse(json_string);
-        Debug.Log(json);
+        UnityEngine.Debug.Log(json);
     }
 
     // Sends the locally stored data to the target API
-    public WWW send_json_dump() {
-         WWW www;
+    public void send_json_dump() {
+        WWW www;
         Hashtable postHeader = new Hashtable();
         postHeader.Add("Content-Type", "application/json");
 
@@ -107,43 +131,20 @@ public class Data_Tracking : MonoBehaviour
 
         www = new WWW("http://185.167.96.189:5000/api/dump", formData, postHeader);
         StartCoroutine(WaitForRequest(www));
-        return www;
-        // StartCoroutine(Post_Request());
     }
 
     IEnumerator WaitForRequest(WWW data)
-{
-    yield return data; // Wait until the download is done
-    if (data.error != null)
     {
-        Debug.Log("There was an error sending request: " + data.error);
-    }
-    else
-    {
-        Debug.Log("WWW Request: " + data.text);
-    }
-}
-
-    IEnumerator Post_Request() {
-        // Convert json string into binary data
-        var jsonBinaryData = System.Text.Encoding.UTF8.GetBytes(json_string);
-        
-        // Configure upload and download
-        DownloadHandlerBuffer downloadHandlerBuffer = new DownloadHandlerBuffer();
-        UploadHandlerRaw uploadHandlerRaw = new UploadHandlerRaw(jsonBinaryData);
-        uploadHandlerRaw.contentType = "application/json";
-        
-        // Generate and sendweb request
-        UnityWebRequest www = new UnityWebRequest("http://185.167.96.189:5000/api/dump", "POST", downloadHandlerBuffer, uploadHandlerRaw);
-        yield return www.SendWebRequest();
-        if (www.result != UnityWebRequest.Result.Success)
+        yield return data; // Wait until the download is done
+        if (data.error != null)
         {
-            Debug.Log(www.error);
+            UnityEngine.Debug.Log("There was an error sending request: " + data.error);
         }
         else
         {
-            Debug.Log("Form upload complete!");
+            UnityEngine.Debug.Log("WWW Request: " + data.text);
         }
+        data.Dispose();
     }
 }
 
