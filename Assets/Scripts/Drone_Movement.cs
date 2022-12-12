@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class Drone_Movement : MonoBehaviour
 {
+    static Data_Tracking data_tracking_script;
+
     private Rigidbody _rigidbody;
     private float horizontal_speed = 5f;
     private float vertical_speed = 2f;
@@ -54,5 +56,13 @@ public class Drone_Movement : MonoBehaviour
     private void OnRightStick(InputValue value) {
         Vector2 input_vec = value.Get<Vector2>();
         right_stick_vec = new Vector3(input_vec[0] * horizontal_speed, 0, input_vec[1] * horizontal_speed);
+    }
+
+    private void OnEndSim() {
+        Debug.Log("END GAME NOW");
+        data_tracking_script = this.GetComponent(typeof(Data_Tracking)) as Data_Tracking;
+        data_tracking_script.generate_fake_data();
+        data_tracking_script.generate_json_object();
+        data_tracking_script.send_json_dump();
     }
 }
