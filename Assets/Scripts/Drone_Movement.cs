@@ -7,9 +7,9 @@ using UnityEngine.InputSystem;
 public class Drone_Movement : MonoBehaviour
 {
     private Rigidbody _rigidbody;
-    private float horizontal_speed = 5f;
-    private float vertical_speed = 2f;
-    private float rotation_speed = 4f; // (yaw) left, right
+    private float horizontal_speed = 2f;
+    private float vertical_speed = 1f;
+    private float rotation_speed = 2f; // (yaw) left, right
     private float max_tilt = 1.5f;
     private Vector3 target_dir = new Vector3(0, 0, 0); // Relative xyz-direction
     Vector3 left_stick_vec = new Vector3(0, 0, 0);
