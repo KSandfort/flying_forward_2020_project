@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    path: Assets/Scenes/Main-Menu.unity
+    guid: 32f03ee1b77885546bcc2c682708c86d
+  - enabled: 1
+    path: Assets/Scenes/Health-Scenario.unity
+    guid: f9d1cf8201f1879438dd9e2569d6e7dd
+  - enabled: 1
+    path: Assets/Scenes/Intruder-Scenario.unity
+    guid: 895332bcdea6e204995d8204422d9447
+  - enabled: 1
+    path: Assets/Scenes/Surveillance-Scenario.unity
+    guid: 45adcca971acd5244ac5b9f301590db4
   m_configObjects: {}
