@@ -9,6 +9,9 @@ public class CanvasManager : MonoBehaviour
 
     // Script reference
     public Data_Tracking_2 data_tracking_script;
+    // Timer
+    public GameObject timer_text_object;
+    private TextMeshProUGUI timer_text;
     // Speed
     public GameObject speed_text_object;
     private TextMeshProUGUI speed_text;
@@ -17,12 +20,13 @@ public class CanvasManager : MonoBehaviour
     private TextMeshProUGUI height_text;
     // Overflown people
     public GameObject overflown_people_text_object;
-    private TextMeshProUGUI overflown_people_text; 
+    private TextMeshProUGUI overflown_people_text;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        timer_text = timer_text_object.GetComponent<TextMeshProUGUI>();
         speed_text = speed_text_object.GetComponent<TextMeshProUGUI>();
         height_text = height_text_object.GetComponent<TextMeshProUGUI>();
         overflown_people_text = overflown_people_text_object.GetComponent<TextMeshProUGUI>();
@@ -33,6 +37,7 @@ public class CanvasManager : MonoBehaviour
     {
         speed_text.text = ((int) (data_tracking_script.get_speed() * 3.6)) .ToString() + " km/h"; // Displays in km/h
         height_text.text = ((float) (Math.Round(data_tracking_script.get_current_height() * 100f)) /100f).ToString() + " m";
+        timer_text.text = data_tracking_script.get_timer().ToString() + " s";
     }
 
     public void update_overflown_people_counter(int count) {
