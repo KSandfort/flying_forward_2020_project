@@ -5,6 +5,9 @@ using UnityEngine.Networking;
 
 public class Data_Tracking_2 : MonoBehaviour
 {
+    // --- Canvas Script reference ---
+    public CanvasManager canvasManager_script;
+
     // --- Tracked variables ---
     private bool mission_success = true;
     private float timer = 0.0f;
@@ -62,7 +65,7 @@ public class Data_Tracking_2 : MonoBehaviour
 
     private void OnPersonOverflownIncreaseCounter() {
         num_overflown_people += 1;
-        Debug.Log("Overflown people: " + num_overflown_people);
+        canvasManager_script.update_overflown_people_counter(num_overflown_people);
     }
 
     public void get_request() {
