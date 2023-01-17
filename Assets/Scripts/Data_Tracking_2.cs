@@ -6,8 +6,11 @@ using UnityEngine.Networking;
 public class Data_Tracking_2 : MonoBehaviour
 {
     // --- Tracked variables ---
+    private bool mission_success = true;
+    private float timer = 0.0f;
     private float max_speed = 0;
     private float avg_speed = 0;
+    private float current_height = 0;
     private float max_height = 0;
     private float avg_height = 0;
     private int num_overflown_people = 0;
@@ -35,17 +38,26 @@ public class Data_Tracking_2 : MonoBehaviour
     {
         update_count += 1; // Keep track of the number of updates
 
+        // --- Mission success/failure ---
+        // TODO
+
+        // --- Timer ---
+        timer += Time.deltaTime;
+
         // --- Speed calculation ---
         current_speed = Mathf.Sqrt(Mathf.Pow(_rigidbody.velocity.x,2) + Mathf.Pow(_rigidbody.velocity.y,2) + Mathf.Pow(_rigidbody.velocity.z,2));
-        // Debug.Log("Current Speed:" + current_speed);
+
         // Avg speed
         avg_speed += (current_speed - avg_speed) / update_count; // Incremental average algorithm
-        // Debug.Log("Avg Speed" + avg_speed);
 
-        // --- Height tracking ---
-        if (max_height < _rigidbody.position.y) {
-            max_height = _rigidbody.position.y;
+        // --- Height calculation ---
+        current_height = _rigidbody.position.y;
+        if (max_height < current_height) {
+            max_height = current_height;
         }
+
+        // Avg height
+        avg_height += (current_height - avg_height) / update_count;
     }
 
     private void OnPersonOverflownIncreaseCounter() {
@@ -83,7 +95,30 @@ public class Data_Tracking_2 : MonoBehaviour
         }
     }
 
+    // --- Access methods ---
+    
+    public int get_timer() {
+        return (int) timer;
+    }
+
     public float get_speed() {
         return this.current_speed;
     }
+
+    public float get_avg_speed() {
+        return this.avg_speed;
+    }
+
+    public float get_current_height() {
+        return current_height;
+    }
+
+    public float get_max_height() {
+        return max_height;
+    }
+
+    public float get_avg_height() {
+        return avg_height;
+    }
+
 }
