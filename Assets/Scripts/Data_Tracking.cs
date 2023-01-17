@@ -148,6 +148,11 @@ public class Data_Tracking : MonoBehaviour
         }
         data.Dispose();
     }
+
+    internal void get_request()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 class DroneVector {
