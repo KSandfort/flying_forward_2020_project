@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,22 +9,27 @@ public class Data_Tracking_2 : MonoBehaviour
     // --- Canvas Script reference ---
     public CanvasManager canvasManager_script;
 
+    // --- Pilot (user) data ---
+    public static int age = 20;
+    public static int flying_exp_hours = 200;
+    public static string license = "A1 & A3";
+
     // --- Tracked variables ---
     private bool mission_success = true;
     private float timer = 0.0f;
+    private float flown_distance = 69.420f;
     private float max_speed = 0;
     private float avg_speed = 0;
-    private float current_height = 0;
     private float max_height = 0;
     private float avg_height = 0;
     private int num_overflown_people = 0;
     private float closest_distance_to_person = float.MaxValue;
     private float closest_distance_to_building = float.MaxValue;
     private float average_closest_distance_to_building = 0;
-    // --------------------------
 
     // --- Helper variables ---
     private float current_speed = 0;
+    private float current_height = 0;
     private long update_count = 0;
     // ------------------------
 
@@ -54,7 +60,7 @@ public class Data_Tracking_2 : MonoBehaviour
         avg_speed += (current_speed - avg_speed) / update_count; // Incremental average algorithm
 
         // --- Height calculation ---
-        current_height = _rigidbody.position.y;
+        current_height = _rigidbody.position.y - 20; // Base height is at 20 meters.
         if (max_height < current_height) {
             max_height = current_height;
         }
@@ -97,6 +103,74 @@ public class Data_Tracking_2 : MonoBehaviour
             }
         }
     }
+
+    // --- POST request (Data dump to API) ---
+
+    public void post_request() {
+        string api_url = "https://drone-flying-online.space/api/data";
+
+        WWW www;
+        Hashtable postHeader = new Hashtable();
+        postHeader.Add("Content-Type", "application/json");
+
+        string json_str = "{\"pilot\": {\"age\": 10,\"licenses\": \"string\",\"flight_hrs\": 0},\"mission\": {\"success\": true,\"duration_secs\": 0,\"distance_m\": 0,\"max_speed_mps\": 0,\"avg_speed_mps\": 0,\"max_height_m\": 0,\"avg_height_m\": 0,\"overflown_people\": 0}}";
+        // convert json string to byte
+        var formData = System.Text.Encoding.UTF8.GetBytes(json_str);
+        JObject json = JObject.Parse(json_str);
+        UnityEngine.Debug.Log(json);
+
+        www = new WWW(api_url, formData, postHeader);
+        StartCoroutine(PostRequest(www));
+    }
+
+    IEnumerator PostRequest(WWW data)
+    {
+        Debug.Log(data.ToString());
+        yield return data; // Wait until the download is done
+        if (data.error != null)
+        {
+            UnityEngine.Debug.Log("There was an error sending request: " + data.error);
+        }
+        else
+        {
+            UnityEngine.Debug.Log("WWW Request: " + data.text);
+        }
+        data.Dispose();
+    }
+
+    private string generate_json_str() {
+        string str = "";
+        str += "{\"pilot\": {\"age\":";
+        str += age;
+        str += ",\"licenses\": \"";
+        str += license;
+        str += "\",\"flight_hrs\":";
+        str += flying_exp_hours;
+        str += "},\"mission\": {\"success\":";
+        if (mission_success) {
+            str += "true";
+        } 
+        else {
+            str += "false";
+        }
+        str += ",\"duration_secs\":";
+        str += (int) timer;
+        str += ",\"distance_m\":";
+        str += flown_distance;
+        str += ",\"max_speed_mps\":";
+        str += max_speed;
+        str += ",\"avg_speed_mps\":";
+        str += avg_speed;
+        str += ",\"max_height_m\": ";
+        str += max_height;
+        str += ",\"avg_height_m\": ";
+        str += avg_height;
+        str += ",\"overflown_people\":";
+        str += num_overflown_people;
+        str += "}}";
+
+        return str;
+    } 
 
     // --- Access methods ---
     

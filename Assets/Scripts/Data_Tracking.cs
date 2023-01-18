@@ -8,10 +8,10 @@ using Newtonsoft.Json.Linq;
 public class Data_Tracking : MonoBehaviour
 {
     // Pilot (user) data
-    private int age;
-    private int flying_exp_mins;
-    private string gender;
-    private string license;
+    public static int age = 20;
+    public static string gender;
+    public static int flying_exp_hours = 200;
+    public static string license = "A1 & A3";
 
     // Flying data
     private string map_type;
@@ -40,8 +40,8 @@ public class Data_Tracking : MonoBehaviour
     void Start()
     {
         // Initialize variables
+        map_type = "Health";
         _rigidbody = GetComponent<Rigidbody>();
-        map_type = "Intruder";
         vector_list = new List<DroneVector>();
         update_count = 0;
         timer = new Stopwatch();
@@ -77,7 +77,7 @@ public class Data_Tracking : MonoBehaviour
 
     public void generate_fake_data() {
         age = 69;
-        flying_exp_mins = 420;
+        flying_exp_hours = 420;
         gender = "m";
         license = "Everything smaller than an Airbus A380";
         time_overflying_people_ms = 69;
@@ -94,7 +94,7 @@ public class Data_Tracking : MonoBehaviour
     }
 
     public void generate_json_object() {
-        json_string = "{ \"user_data\": { \"age\": " + age + ", \"flying_exp_mins\": " + flying_exp_mins + ",";
+        json_string = "{ \"user_data\": { \"age\": " + age + ", \"flying_exp_mins\": " + flying_exp_hours + ",";
         json_string += "\"gender\": \"" + gender + "\", \"license\": \"" + license + "\" }, ";
         json_string += "\"map\": \"" + map_type + "\", \"summary\": {";
         json_string += "\"time_overflying_people_ms\": " + time_overflying_people_ms + ",";
