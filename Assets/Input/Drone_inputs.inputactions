@@ -101,6 +101,61 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "2D Vector",
+                    "id": "ebee58cb-7e90-4207-adbf-e3f089ac4b7c",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftStick",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "3a175072-2bac-4c61-8556-870ee1b0e065",
+                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftStick",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "30be114f-5012-4b96-923e-13887b102092",
+                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftStick",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "3a17f4c9-534b-44f5-9057-6128dd03a369",
+                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/rx",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftStick",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "fd5dadce-23df-4614-be57-c9b9e6a437e8",
+                    "path": "<HID::OpenTX Radiomaster TX12 Joystick>/rx",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftStick",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "Arrows",
                     "id": "45838b27-2964-42d2-8024-63ccae8a028f",
                     "path": "2DVector",
@@ -159,6 +214,17 @@
                     "name": "",
                     "id": "651362ec-1e28-4056-bc60-fbbbecf041e4",
                     "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightStick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1287a0cb-aa4b-4178-9451-cacc2c174c65",
+                    "path": "<Joystick>/stick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
