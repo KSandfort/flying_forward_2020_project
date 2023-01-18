@@ -10,14 +10,14 @@ public class Data_Tracking_2 : MonoBehaviour
     public CanvasManager canvasManager_script;
 
     // --- Pilot (user) data ---
-    public static int age = 20;
-    public static int flying_exp_hours = 200;
-    public static string license = "A1 & A3";
+    public static int age = 0;
+    public static int flying_exp_hours = 0;
+    public static string license = "None";
 
     // --- Tracked variables ---
     private bool mission_success = true;
     private float timer = 0.0f;
-    private float flown_distance = 69.420f;
+    private float flown_distance = 0;
     private float max_speed = 0;
     private float avg_speed = 0;
     private float max_height = 0;
@@ -31,6 +31,7 @@ public class Data_Tracking_2 : MonoBehaviour
     private float current_speed = 0;
     private float current_height = 0;
     private long update_count = 0;
+    private Vector3 last_pos;
     // ------------------------
 
     private Rigidbody _rigidbody;
@@ -40,6 +41,7 @@ public class Data_Tracking_2 : MonoBehaviour
     {
         GameEvents.current.onPersonOverflown += OnPersonOverflownIncreaseCounter;
         _rigidbody = GetComponent<Rigidbody>();
+        last_pos = _rigidbody.position;
     }
 
     // Update is called once per frame
@@ -53,11 +55,21 @@ public class Data_Tracking_2 : MonoBehaviour
         // --- Timer ---
         timer += Time.deltaTime;
 
+        // --- Flown distance ---
+        Vector3 new_pos = _rigidbody.position;
+        flown_distance += Vector3.Distance(last_pos, new_pos);
+        last_pos = new_pos;
+
         // --- Speed calculation ---
         current_speed = Mathf.Sqrt(Mathf.Pow(_rigidbody.velocity.x,2) + Mathf.Pow(_rigidbody.velocity.y,2) + Mathf.Pow(_rigidbody.velocity.z,2));
 
         // Avg speed
         avg_speed += (current_speed - avg_speed) / update_count; // Incremental average algorithm
+
+        // Max speed
+        if (current_speed > max_speed) {
+            max_speed = current_speed;
+        }
 
         // --- Height calculation ---
         current_height = _rigidbody.position.y - 20; // Base height is at 20 meters.
@@ -111,9 +123,12 @@ public class Data_Tracking_2 : MonoBehaviour
 
         WWW www;
         Hashtable postHeader = new Hashtable();
+        postHeader.Add("accept", "application/json");
         postHeader.Add("Content-Type", "application/json");
 
-        string json_str = "{\"pilot\": {\"age\": 10,\"licenses\": \"string\",\"flight_hrs\": 0},\"mission\": {\"success\": true,\"duration_secs\": 0,\"distance_m\": 0,\"max_speed_mps\": 0,\"avg_speed_mps\": 0,\"max_height_m\": 0,\"avg_height_m\": 0,\"overflown_people\": 0}}";
+        //string json_str = "{\"pilot\": {\"age\": 10,\"licenses\": \"string\",\"flight_hrs\": 0},\"mission\": {\"success\": true,\"duration_secs\": 0,\"distance_m\": 0,\"max_speed_mps\": 0,\"avg_speed_mps\": 0,\"max_height_m\": 0,\"avg_height_m\": 0,\"overflown_people\": 0}}";
+        string json_str = generate_json_str();
+        
         // convert json string to byte
         var formData = System.Text.Encoding.UTF8.GetBytes(json_str);
         JObject json = JObject.Parse(json_str);
@@ -125,7 +140,6 @@ public class Data_Tracking_2 : MonoBehaviour
 
     IEnumerator PostRequest(WWW data)
     {
-        Debug.Log(data.ToString());
         yield return data; // Wait until the download is done
         if (data.error != null)
         {
