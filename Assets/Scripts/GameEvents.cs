@@ -13,10 +13,17 @@ public class GameEvents : MonoBehaviour
     }
 
     public event Action onPersonOverflown;
+    public event Action onTargetAreaReached;
     
     public void OnPersonOverflown() {
         if (onPersonOverflown != null) {
             onPersonOverflown();
+        }
+    }
+
+    public void OnTargetAreaReached() {
+        if (onTargetAreaReached != null) {
+            onTargetAreaReached();
         }
     }
 }

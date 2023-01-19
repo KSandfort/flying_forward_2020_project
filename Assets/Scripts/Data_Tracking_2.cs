@@ -40,8 +40,19 @@ public class Data_Tracking_2 : MonoBehaviour
     void Start()
     {
         GameEvents.current.onPersonOverflown += OnPersonOverflownIncreaseCounter;
+        GameEvents.current.onTargetAreaReached += OnHasReachedTarget;
         _rigidbody = GetComponent<Rigidbody>();
         last_pos = _rigidbody.position;
+    }
+
+    private void OnHasReachedTarget() {
+        post_request();
+        // End simulation afterwards
+    }
+
+    private void OnPersonOverflownIncreaseCounter() {
+        num_overflown_people += 1;
+        canvasManager_script.update_overflown_people_counter(num_overflown_people);
     }
 
     // Update is called once per frame
@@ -79,11 +90,6 @@ public class Data_Tracking_2 : MonoBehaviour
 
         // Avg height
         avg_height += (current_height - avg_height) / update_count;
-    }
-
-    private void OnPersonOverflownIncreaseCounter() {
-        num_overflown_people += 1;
-        canvasManager_script.update_overflown_people_counter(num_overflown_people);
     }
 
     public void get_request() {
