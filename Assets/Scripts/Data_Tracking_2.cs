@@ -9,6 +9,7 @@ public class Data_Tracking_2 : MonoBehaviour
     // --- Canvas Script reference ---
     public CanvasManager canvasManager_script;
     public GameObject success_text;
+    public GameObject fail_text;
 
     // --- Pilot (user) data ---
     public static int age = 0;
@@ -43,6 +44,7 @@ public class Data_Tracking_2 : MonoBehaviour
         GameEvents.current.onPersonOverflown += OnPersonOverflownIncreaseCounter;
         GameEvents.current.onTargetAreaReached += OnHasReachedTarget;
         success_text.SetActive(false);
+        fail_text.SetActive(false);
         _rigidbody = GetComponent<Rigidbody>();
         last_pos = _rigidbody.position;
     }
@@ -59,18 +61,19 @@ public class Data_Tracking_2 : MonoBehaviour
 
     private void OnCollisionEnter(Collision other) {
         mission_success = false;
+        fail_text.SetActive(true);
         stop_simulation();
     }
 
     private void stop_simulation() {
         post_request();
         Time.timeScale = 0;
-        _wait();
-        Application.Quit();
+        _wait_and_quit();
     }
 
-    IEnumerator _wait(){
+    IEnumerator _wait_and_quit(){
         yield return new WaitForSeconds(3);
+        Application.Quit();
     }
 
     // Update is called once per frame
