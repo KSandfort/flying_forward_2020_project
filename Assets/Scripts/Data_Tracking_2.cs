@@ -48,15 +48,29 @@ public class Data_Tracking_2 : MonoBehaviour
     }
 
     private void OnHasReachedTarget() {
-        post_request();
-        // End simulation afterwards
         success_text.SetActive(true);
-        Time.timeScale = 0;
+        stop_simulation();
     }
 
     private void OnPersonOverflownIncreaseCounter() {
         num_overflown_people += 1;
         canvasManager_script.update_overflown_people_counter(num_overflown_people);
+    }
+
+    private void OnCollisionEnter(Collision other) {
+        mission_success = false;
+        stop_simulation();
+    }
+
+    private void stop_simulation() {
+        post_request();
+        Time.timeScale = 0;
+        _wait();
+        Application.Quit();
+    }
+
+    IEnumerator _wait(){
+        yield return new WaitForSeconds(3);
     }
 
     // Update is called once per frame
