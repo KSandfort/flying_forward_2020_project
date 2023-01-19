@@ -30,17 +30,18 @@ public class Drone_Movement : MonoBehaviour
         // Combine both stick inputs for target direction (xyz)
         target_dir = (left_stick_vec + right_stick_vec); // Combine left and right stick inputs
         
-        // Rotate drone (tilt)
         Vector3 x_z_rotation = new Vector3(right_stick_vec[2] * max_tilt, 0, -right_stick_vec[0] * max_tilt); // TODO: Find current y rotation
         Quaternion x_z_quaternion = Quaternion.Euler(x_z_rotation);
-        tilt_controller.transform.localRotation = x_z_quaternion;
-        
-        // Rotate drone (yaw)
         Quaternion deltaRotation = Quaternion.Euler(rotation_vel_vec);
-        _rigidbody.MoveRotation(_rigidbody.rotation * deltaRotation);
         
-        // Add velocity
-        _rigidbody.velocity += (_rigidbody.rotation * target_dir);
+        if (Data_Tracking_2.enable_controls) {
+            // Tilt drone
+            tilt_controller.transform.localRotation = x_z_quaternion;
+            // Rotate drone (yaw)
+            _rigidbody.MoveRotation(_rigidbody.rotation * deltaRotation);
+            // Add velocity
+            _rigidbody.velocity += (_rigidbody.rotation * target_dir);
+        }
     }
 
     // Called when left stick input is perceived.
@@ -54,5 +55,9 @@ public class Drone_Movement : MonoBehaviour
     private void OnRightStick(InputValue value) {
         Vector2 input_vec = value.Get<Vector2>();
         right_stick_vec = new Vector3(input_vec[0] * horizontal_speed, 0, input_vec[1] * horizontal_speed);
+    }
+
+    private void OnEscape() {
+        Application.Quit();
     }
 }

@@ -30,6 +30,7 @@ public class Data_Tracking_2 : MonoBehaviour
     private float average_closest_distance_to_building = 0;
 
     // --- Helper variables ---
+    public static bool enable_controls = true;
     private float current_speed = 0;
     private float current_height = 0;
     private long update_count = 0;
@@ -67,13 +68,7 @@ public class Data_Tracking_2 : MonoBehaviour
 
     private void stop_simulation() {
         post_request();
-        Time.timeScale = 0;
-        _wait_and_quit();
-    }
-
-    IEnumerator _wait_and_quit(){
-        yield return new WaitForSeconds(3);
-        Application.Quit();
+        enable_controls = false;
     }
 
     // Update is called once per frame
