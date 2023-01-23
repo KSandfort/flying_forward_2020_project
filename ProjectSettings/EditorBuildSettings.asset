@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Health-Scenario.unity
     guid: f9d1cf8201f1879438dd9e2569d6e7dd
+  - enabled: 1
+    path: Assets/Scenes/Controls-Test.unity
+    guid: 86b752930eefdc746b6e7f6b66502796
   m_configObjects: {}

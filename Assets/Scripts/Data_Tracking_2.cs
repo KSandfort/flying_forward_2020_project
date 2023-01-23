@@ -76,9 +76,6 @@ public class Data_Tracking_2 : MonoBehaviour
     {
         update_count += 1; // Keep track of the number of updates
 
-        // --- Mission success/failure ---
-        // TODO
-
         // --- Timer ---
         timer += Time.deltaTime;
 

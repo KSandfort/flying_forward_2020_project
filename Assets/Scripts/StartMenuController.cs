@@ -27,7 +27,6 @@ public class StartMenuController : MonoBehaviour
     }
 
     public void StartMainScene() {
-        
 
         // Set age
         int dropdown_age_index = dropdown_age.value;
@@ -114,5 +113,9 @@ public class StartMenuController : MonoBehaviour
         }
 
         SceneManager.LoadScene("Health-Scenario");
+    }
+
+    public void startControlsTestScene() {
+        SceneManager.LoadScene("Controls-Test");
     }
 }
